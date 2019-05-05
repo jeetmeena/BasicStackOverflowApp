@@ -1,12 +1,26 @@
 package com.example.stackoverflowandroidapplication;
 
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,6 +31,7 @@ import android.view.ViewGroup;
  * Use the {@link YourHashFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@SuppressLint("ValidFragment")
 public class YourHashFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,11 +43,24 @@ public class YourHashFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    public YourHashFragment() {
+    ArrayList<ItemObject> mPopulerTagsList;
+    RecyclerView mYourHasRecyclerView;
+    RecyclerView.LayoutManager mYourHasLayoutMa;
+    private QuetiionViewModel quetiionViewModel;
+    private String mTag;
+    private int mTagCount=1;
+    QusAddpter qusAddpter;
+    QuestionListActivity questionListActivity;
+     @SuppressLint("ValidFragment")
+    public YourHashFragment(String tags, int tagCount) {
         // Required empty public constructor
+        mTag=tags;
+        mTagCount=tagCount;
     }
-
+    public YourHashFragment(){}
+    public static YourHashFragment newInstance(){
+        return new YourHashFragment();
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -48,6 +76,7 @@ public class YourHashFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -63,10 +92,89 @@ public class YourHashFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.fragment_your_hash, container, false);
+        mYourHasRecyclerView=view.findViewById(R.id.your_has_recycler);
+        mYourHasLayoutMa=new LinearLayoutManager(getActivity());
+        mYourHasRecyclerView.setLayoutManager(mYourHasLayoutMa);
+        qusAddpter=new QusAddpter();
+        mYourHasRecyclerView.setAdapter(qusAddpter);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_your_hash2, container, false);
+        quetiionViewModel= ViewModelProviders.of(this).get(QuetiionViewModel.class);
+        questionListActivity=QuestionListActivity.getQuestionListActivity();
+        setObserve(mTagCount );
+        return view;
     }
 
+    public void setObserve(int mTagCount ){
+        switch (questionListActivity.mTagCount){
+            case 1:
+                quetiionViewModel.getAllTagFirstYour().observe(this, new Observer<List<TagFirst>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TagFirst> tagFirsts) {
+                        ArrayList<ItemObject> arrayList=new ArrayList<>();
+                        for(int i=0;i<tagFirsts.size();i++){
+                            ItemObject itemObject=new ItemObject(tagFirsts.get(i).getQutionTitle(),tagFirsts.get(i).getQutionLink()
+                                    ,tagFirsts.get(i).getAnswered(),tagFirsts.get(i).getAnswerCount(),tagFirsts.get(i).getTypesActivit());
+                              arrayList.add(itemObject);
+                            Log.e("Tag",""+itemObject);
+                        }
+                        qusAddpter.setmPopulerTagsList(arrayList);
+                       // Log.e("Tag",""+tagFirsts);
+
+                    }
+                });
+                break;
+            case 2:
+                quetiionViewModel.getAllTagsecondYour().observe(this, new Observer<List<TagSecond>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TagSecond> tagSeconds) {
+                        ArrayList<ItemObject> arrayList=new ArrayList<>();
+                        for(int i=0;i<tagSeconds.size();i++){
+                            ItemObject itemObject=new ItemObject(tagSeconds.get(i).getQutionTitle(),tagSeconds.get(i).getQutionLink()
+                                    ,tagSeconds.get(i).getAnswered(),tagSeconds.get(i).getAnswerCount(),tagSeconds.get(i).getTypesActivit());
+                            arrayList.add(itemObject);
+
+                        }
+                        Log.e("Tag","Y2");
+                        qusAddpter.setmPopulerTagsList(arrayList);
+                    }
+                });
+                break;
+            case 3:
+                quetiionViewModel.getAllTagThridYour().observe(this, new Observer<List<TagThrid>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TagThrid> tagThrids) {
+                        ArrayList<ItemObject> arrayList=new ArrayList<>();
+                        for(int i=0;i<tagThrids.size();i++){
+                            ItemObject itemObject=new ItemObject(tagThrids.get(i).getQutionTitle(),tagThrids.get(i).getQutionLink()
+                                    ,tagThrids.get(i).getAnswered(),tagThrids.get(i).getAnswerCount(),tagThrids.get(i).getTypesActivit());
+                            arrayList.add(itemObject);
+
+                        }
+                        Log.e("Tag","Y3");
+                        qusAddpter.setmPopulerTagsList(arrayList);
+                    }
+                });
+                break;
+            case 4:
+                quetiionViewModel.getAllTagForthYour().observe(this, new Observer<List<TagForth>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TagForth> tagForths) {
+                        ArrayList<ItemObject> arrayList=new ArrayList<>();
+                        for(int i=0;i<tagForths.size();i++){
+                            ItemObject itemObject=new ItemObject(tagForths.get(i).getQutionTitle(),tagForths.get(i).getQutionLink()
+                                    ,tagForths.get(i).getAnswered(),tagForths.get(i).getAnswerCount(),tagForths.get(i).getTypesActivit());
+                            arrayList.add(itemObject);
+
+                        }
+                        Log.e("Tag","Y4");
+                        qusAddpter.setmPopulerTagsList(arrayList);
+                    }
+                });
+                break;
+        }
+
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -78,6 +186,7 @@ public class YourHashFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+
     }
 
     @Override
@@ -85,6 +194,8 @@ public class YourHashFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -100,4 +211,50 @@ public class YourHashFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    private   class QusAddpter extends RecyclerView.Adapter<QusAddpter.ViewHolder> {
+        //public ArrayList<StackActiveTags> mPopulerTagsList;
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            View view= LayoutInflater.from(getActivity()).inflate(R.layout.qui_jtems,null);
+            ViewHolder viewHolder=new ViewHolder(view);
+            return viewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+            viewHolder.showTagTextView.setText(mPopulerTagsList.get(i).getQutionTitle());
+
+        }
+        void setmPopulerTagsList(ArrayList<ItemObject> mTagsListt){
+            mPopulerTagsList=  mTagsListt;
+            notifyDataSetChanged();
+            Log.e("Tag","DataCang" );
+        }
+        @Override
+        public int getItemCount() {
+            if(mPopulerTagsList!=null) return mPopulerTagsList.size();
+            return 0;
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            TextView showTagTextView;
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                showTagTextView=itemView.findViewById(R.id.qui_item_text);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                final int ind = getAdapterPosition();
+
+
+            }
+        }
+    }
+
+
 }
+
+

@@ -9,10 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
+ import android.view.View;
+ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -87,36 +85,12 @@ public class LoginActivity extends AppCompatActivity {
                     String token_str = url;
                      String[] str = token_str.split("access_token=");
                      String token = str[1].substring(0, str[1].length() - 14);
-
+                    Toast.makeText(LoginActivity.this, ""+token, Toast.LENGTH_SHORT).show();
                     //Calling method to get UserId
                     StackUserRepo stackUserRepos = null;
-                    Webservice webservice=  CanncetionController.getRetrofitInstance("https://stackexchange.com/").create(Webservice.class);
-                     Call<StackUserInfo> call=webservice.getUserId("stackoverflow", key, token, new Callback<StackUserInfo>() {
-                        @Override
-                        public void onResponse(Call<StackUserInfo> call, Response<StackUserInfo> response) {
-                            if (mProgressDialog.isShowing() && mProgressDialog!=null)
-                                mProgressDialog.dismiss();
-
-                            //logger.debug("UserId: " + info.getItems().get(0).getUserId());
-                            finishActitv(response.body().getItems().get(0).getUserId());
-                        }
-
-                        @Override
-                        public void onFailure(Call<StackUserInfo> call, Throwable t) {
-                            if (mProgressDialog.isShowing() && mProgressDialog!=null)
-                                mProgressDialog.dismiss();
-
-                            String merror = t.getMessage();
-                            logger.info("merror :" + merror);
-                            Snackbar.make(browser, merror, Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
 
 
-
-                        }
-                    });
-
-                    finishActitv("newUs");
+                    finishActitv(token);
                     //Intent intent = new Intent();
                     //intent.putExtra(EXTRA_ACTION_TOKEN_URL, url);
                     //setResult(Activity.RESULT_OK, intent);
@@ -134,15 +108,21 @@ public class LoginActivity extends AppCompatActivity {
         questionListActivity.saveToPerferences("OpenAppFirstTime","True");
         questionListActivity.saveToPerferences("userId",UserId);
 
-        Toast.makeText(LoginActivity.this, ""+UserId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(LoginActivity.this, ""+UserId, Toast.LENGTH_SHORT).show();
 
         Intent i = new Intent(this, UserInterestActivty.class);
         startActivity(i);
-        this.finish();
+        finish();
      }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
     }
 }

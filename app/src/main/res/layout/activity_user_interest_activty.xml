@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserInterestActivty">
+    tools:context=".UserInterestActivty"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.NoActionBar"
 
 
+    >
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:id="@+id/selected_tags_recycler"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+          >
+
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/selected_tags_recycler"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-         android:id="@+id/recycler"
+         android:id="@+id/select_tag_recycler"
         >
 
     </android.support.v7.widget.RecyclerView>
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/button_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorGreenLight"
+        android:text="Submit"
+        android:textColor="@color/colorWhite"
+        />
+</RelativeLayout>

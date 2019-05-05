@@ -46,6 +46,7 @@ public class CanncetionController{
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
+            Webservice interfaz = retrofit.create(Webservice.class);
         }
         return retrofit;
     }
